@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 import uuid
 from .models import Url
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseNotFound
 
 # Create your views here.
 def index(request):
@@ -15,6 +15,17 @@ def create(request):
         new_url.save()
         return HttpResponse(uid)
 
+from django.shortcuts import get_object_or_404
+
+# Example handling in shortner/views.py
+from django.shortcuts import redirect
 def go(request, pk):
-    url_details = Url.objects.get(uuid=pk)
-    return redirect('https://'+url_details.link)
+    if pk == 'admin':
+        return redirect('/admin/')  # Redirect to Django admin
+    else:
+        try:
+            url_details = Url.objects.get(uuid=pk)
+            return redirect('https://' + url_details.link)
+        except Url.DoesNotExist:
+            return HttpResponseNotFound('URL not found')
+
