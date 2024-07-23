@@ -25,7 +25,8 @@ def go(request, pk):
     else:
         try:
             url_details = Url.objects.get(uuid=pk)
-            return redirect('https://' + url_details.link)
+            url_details=url_details.link[8::]
+            return redirect('https://'+url_details)
         except Url.DoesNotExist:
             return HttpResponseNotFound('URL not found')
 
